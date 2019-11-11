@@ -1,3 +1,7 @@
+# User Settings
+*.ind
+*.ld
+
 # Prerequisites
 *.d
 
