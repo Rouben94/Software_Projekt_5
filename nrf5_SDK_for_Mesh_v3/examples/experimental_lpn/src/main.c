@@ -35,6 +35,11 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+// Did not enter Sleep ? 
+// Set bit 7 and bits 4..0 in the mask to one (0x ...00 1001 1111)
+#define FPU_EXCEPTION_MASK 0x0000009F 
+
+
 #include <stdint.h>
 #include <string.h>
 
@@ -590,6 +595,12 @@ int main(void)
 
     for (;;)
     {
+      /* Clear exceptions and PendingIRQ from the FPU unit */
+      __set_FPSCR(__get_FPSCR()  & ~(FPU_EXCEPTION_MASK));      
+      (void) __get_FPSCR();
+      NVIC_ClearPendingIRQ(FPU_IRQn); 
+
+      /* Call SoftDevice Wait For event */
         (void)sd_app_evt_wait();
     }
 }
