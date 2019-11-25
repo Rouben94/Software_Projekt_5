@@ -53,16 +53,30 @@
 #include "app_switch.h"
 #include "ble_softdevice_support.h"
 
+#include "flash_manager.h" // For storing custom data in flash.
+
+
 #define SWITCH_SERVER_0_PIN        (BSP_LED_0)
 #define SWITCH_SERVER_1_PIN        (BSP_LED_1)
 #define APP_SWITCH_0_ELEMENT_INDEX (0)
-#define APP_SWITCH_1_ELEMENT_INDEX (1)
 
 static bool m_device_provisioned;
 static bool m_config = false;
 
 static void start(void);
-static void models_init_cb_test(void);
+
+/*****************************************************************************
+* Custom data in flash
+ *****************************************************************************/
+ #define FLASH_CUSTOM_DATA_GROUP_ELEMENT 0x1ABC // A number in the range 0x0000 - 0x7EFF (flash_manager.h)
+ #define CUSTOM_DATA_FLASH_PAGE_COUNT 1
+
+ typedef struct 
+ {
+   uint32_t data[2];
+ } custom_data_format_t; // Format for the custom data
+
+ static flash_manager_t m_custom_data_flash_manager; // flash manager instance 
 
 /*************************************************************************************************/
 static void app_switch_server_set_cb(const app_switch_server_t * p_server, bool switch_state);
@@ -94,52 +108,11 @@ static void app_switch_server_get_cb(const app_switch_server_t * p_server, bool 
 }
 
 /*************************************************************************************************/
-static void app_switch_server1_set_cb(const app_switch_server_t * p_server, bool switch_state);
-static void app_switch_server1_get_cb(const app_switch_server_t * p_server, bool * p_present_switch);
-
-/* Generic switch server structure definition and initialization */
-APP_SWITCH_SERVER_DEF(m_switch_server_1,
-                     APP_CONFIG_FORCE_SEGMENTATION,
-                     APP_CONFIG_MIC_SIZE,
-                     app_switch_server1_set_cb,
-                     app_switch_server1_get_cb)
-
-/* Callback for updating the hardware state */
-static void app_switch_server1_set_cb(const app_switch_server_t * p_server, bool switch_state)
-{
-    /* Resolve the server instance here if required, this example uses only 1 instance. */
-
-    __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "Setting GPIO value: %d\n", switch_state)
-
-    hal_led_pin_set(SWITCH_SERVER_1_PIN, switch_state);
-}
-
-/* Callback for reading the hardware state */
-static void app_switch_server1_get_cb(const app_switch_server_t * p_server, bool * p_present_switch)
-{
-    /* Resolve the server instance here if required, this example uses only 1 instance. */
-
-    *p_present_switch = hal_led_pin_get(SWITCH_SERVER_1_PIN);
-}
-
-/*************************************************************************************************/
 static void app_model_init(void)
 {
     /* Instantiate switch server on element index APP_SWITCH_ELEMENT_0_INDEX */
     ERROR_CHECK(app_switch_init(&m_switch_server_0, APP_SWITCH_0_ELEMENT_INDEX));
     __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "App switch Model 0 Handle: %d\n", m_switch_server_0.server.model_handle);
-}
-
-/*************************************************************************************************/
-static void app_model_init_test(void)
-{
-    /* Instantiate switch server on element index APP_SWITCH_ELEMENT_0_INDEX */
-    ERROR_CHECK(app_switch_init(&m_switch_server_0, APP_SWITCH_0_ELEMENT_INDEX));
-    __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "App switch Model 0 Handle: %d\n", m_switch_server_0.server.model_handle);
-
-    /* Instantiate switch server on element index APP_SWITCH_ELEMENT_0_INDEX */
-    ERROR_CHECK(app_switch_init(&m_switch_server_1, APP_SWITCH_1_ELEMENT_INDEX));
-    __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "App switch Model 1 Handle: %d\n", m_switch_server_1.server.model_handle);
 }
 
 /*************************************************************************************************/
@@ -160,25 +133,6 @@ static void config_server_evt_cb(const config_server_evt_t * p_evt)
     }
 }
 
-static void models_init_cb_test(void)
-{
-    __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "Initializing and adding models\n");
-    app_model_init_test();
-}
-
-static void mesh_init_test(void)
-{
-      mesh_stack_init_params_t init_params =
-      {
-        .core.irq_priority       = NRF_MESH_IRQ_PRIORITY_LOWEST,
-        .core.lfclksrc           = DEV_BOARD_LF_CLK_CFG,
-        .core.p_uuid             = NULL,
-        .models.models_init_cb   = models_init_cb_test,
-        .models.config_server_cb = config_server_evt_cb
-      };
-    ERROR_CHECK(mesh_stack_init(&init_params, &m_device_provisioned));
-}
-
 static void button_event_handler(uint32_t button_number)
 {
     //__LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "Button %u pressed\n", button_number);
@@ -190,8 +144,6 @@ static void button_event_handler(uint32_t button_number)
         case 0:
         {
             __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "Button 1 was pressed \n");
-            //hal_led_pin_set(SWITCH_SERVER_0_PIN, !hal_led_pin_get(SWITCH_SERVER_0_PIN));
-            //app_switch_status_publish(&m_switch_server_0);
             break;
         }
 
@@ -204,8 +156,6 @@ static void button_event_handler(uint32_t button_number)
         case 2:
         {
             __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "Button 3 was pressed \n");
-            ERROR_CHECK(app_switch_init(&m_switch_server_1, APP_SWITCH_1_ELEMENT_INDEX));
-            __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "App switch Model 1 Handle: %d\n", m_switch_server_1.server.model_handle);
             break;
         }
 
@@ -348,6 +298,72 @@ int main(void)
 {
     initialize();
     start();
+
+    uint32_t ret_code;
+
+
+    /* Adding custom data to flash for persistent storage */
+
+    // 1) Flash manager is already initialized
+
+    // 2) Add a new flash manager instance. NB: should not overlap (in region) the instance used by mesh.  
+
+    flash_manager_config_t custom_data_manager_config;
+    custom_data_manager_config.write_complete_cb = NULL; 
+    custom_data_manager_config.invalidate_complete_cb = NULL; 
+    custom_data_manager_config.remove_complete_cb = NULL; 
+    custom_data_manager_config.min_available_space = WORD_SIZE;
+
+    // The new instance of flash manager should use an unused region of flash:
+    custom_data_manager_config.p_area = (const flash_manager_page_t *) (((const uint8_t *) dsm_flash_area_get()) - (ACCESS_FLASH_PAGE_COUNT * PAGE_SIZE) - (NET_FLASH_PAGE_COUNT * PAGE_SIZE) );
+    
+    custom_data_manager_config.page_count = CUSTOM_DATA_FLASH_PAGE_COUNT;
+   
+    ret_code = flash_manager_add(&m_custom_data_flash_manager, &custom_data_manager_config);
+   
+    if (NRF_SUCCESS != ret_code) {
+    __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "Flash error: no memory\n",ret_code);
+    
+    }
+   
+    
+    // 3) Write to Flash
+
+    // a) allocate flash 
+    fm_entry_t * p_entry = flash_manager_entry_alloc(&m_custom_data_flash_manager, FLASH_CUSTOM_DATA_GROUP_ELEMENT, sizeof(custom_data_format_t));
+    if (p_entry == NULL)
+    {
+      return NRF_ERROR_BUSY;
+    }
+      else
+    {
+       
+      custom_data_format_t * p_custom_data = (custom_data_format_t *) p_entry->data;
+      p_custom_data->data[0] = 5;
+      p_custom_data->data[1] = 9;
+   
+      // b) write to flash
+      flash_manager_entry_commit(p_entry);
+      __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "write:%x, %x\n",p_entry->data[0], p_entry->data[1]);
+      
+    }
+    
+    
+    // 4) Wait for flash manager to finish.
+    flash_manager_wait();
+   
+   
+    
+    // 5) Read from Flash
+    const fm_entry_t * p_read_raw = flash_manager_entry_get(&m_custom_data_flash_manager, FLASH_CUSTOM_DATA_GROUP_ELEMENT);
+    
+    const custom_data_format_t * p_read_data = (const custom_data_format_t *) p_read_raw->data;
+    __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "read:%x, %x\n",p_read_data->data[0], p_read_data->data[1]);
+
+
+
+
+
 
     for (;;) {
       (void)sd_app_evt_wait();
