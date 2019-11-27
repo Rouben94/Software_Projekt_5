@@ -61,29 +61,29 @@
 /** Parameters for the generic_level Set message. */
 typedef struct
 {
-    uint16_t level;                                       /**< Value of the Level state */
+    uint32_t level;                                       /**< Value of the Level state */
     uint8_t tid;                                          /**< Transaction ID */
 } generic_level_set_params_t;
 
 /** Message format for the generic_level Delta Set message. */
 typedef struct
 {
-    int32_t delta_level;                                  /**< Value of the Delta Level state */
+    uint32_t delta_level;                                  /**< Value of the Delta Level state */
     uint8_t tid;                                          /**< Transaction ID */
 } generic_level_delta_set_params_t;
 
 /** Message format for the generic_level Move Set message. */
 typedef struct
 {
-    int16_t move_level;                                    /**< Value of the Move Level state */
+    uint32_t move_level;                                    /**< Value of the Move Level state */
     uint8_t tid;                                           /**< Transaction ID */
 } generic_level_move_set_params_t;
 
 /** Parameters for the generic_level Status message. */
 typedef struct
 {
-    int16_t present_level;                                 /**< The present value of the Generic Level state */
-    int16_t target_level;                                  /**< The target value of the Generic Level state (optional) */
+    uint32_t present_level;                                 /**< The present value of the Generic Level state */
+    uint32_t target_level;                                  /**< The target value of the Generic Level state (optional) */
     uint32_t remaining_time_ms;                            /**< Remaining time value in milliseconds */
 } generic_level_status_params_t;
 

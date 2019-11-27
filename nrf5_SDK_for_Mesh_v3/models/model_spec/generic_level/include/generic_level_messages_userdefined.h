@@ -39,7 +39,7 @@
 #define GENERIC_LEVEL_MESSAGES_H__
 
 #include <stdint.h>
-#include "generic_level_common.h"
+#include "generic_level_common_userdefined.h"
 /**
  * @internal
  * @defgroup GENERIC_LEVEL_MESSAGES Internal header
@@ -88,7 +88,7 @@ typedef enum
 /** Message format for the generic_level Set message. */
 typedef struct __attribute((packed))
 {
-    int16_t level;                                          /**< State to set */
+    uint32_t level;                                          /**< State to set */
     uint8_t tid;                                            /**< Transaction number for application */
     uint8_t transition_time;                                /**< Encoded transition time value */
     uint8_t delay;                                          /**< Encoded message execution delay in 5 millisecond steps */
@@ -97,7 +97,7 @@ typedef struct __attribute((packed))
 /** Message format for the generic_level Delta Set message. */
 typedef struct __attribute((packed))
 {
-    int32_t delta_level;                                    /**< State to set */
+    uint32_t delta_level;                                    /**< State to set */
     uint8_t tid;                                            /**< Transaction number for application */
     uint8_t transition_time;                                /**< Encoded transition time value */
     uint8_t delay;                                          /**< Encoded message execution delay in 5 millisecond steps */
@@ -106,7 +106,7 @@ typedef struct __attribute((packed))
 /** Message format for the generic_level Move Set message. */
 typedef struct __attribute((packed))
 {
-    int16_t move_level;                                     /**< State to set */
+    uint32_t move_level;                                     /**< State to set */
     uint8_t tid;                                            /**< Transaction number for application */
     uint8_t transition_time;                                /**< Encoded transition time value */
     uint8_t delay;                                          /**< Encoded message execution delay in 5 millisecond steps */
@@ -115,8 +115,8 @@ typedef struct __attribute((packed))
 /** Message format for the generic_level Status message. */
 typedef struct __attribute((packed))
 {
-    int16_t present_level;                                  /**< The present value of the Generic Level state */
-    int16_t target_level;                                   /**< The target value of the Generic Level state (optional) */
+    uint32_t present_level;                                  /**< The present value of the Generic Level state */
+    uint32_t target_level;                                   /**< The target value of the Generic Level state (optional) */
     uint8_t remaining_time;                                 /**< Encoded remaining time */
 } generic_level_status_msg_pkt_t;
 
