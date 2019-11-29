@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
- /** LPN feature */
+/** LPN feature */
 #define MESH_FEATURE_LPN_ENABLED 0
 
 // Did not enter Sleep ?
@@ -43,12 +43,12 @@
 
 #if MESH_FEATURE_LPN_ENABLED
 /* LPN */
-#include "mesh_lpn.h"
 #include "mesh_friendship_types.h"
+#include "mesh_lpn.h"
 
 /* nRF5 SDK */
-#include "nrf_soc.h"
 #include "nrf_pwr_mgmt.h"
+#include "nrf_soc.h"
 #endif
 
 /* Provisioning and configuration */
@@ -114,26 +114,26 @@ static void initiate_friendship()
     uint32_t status = mesh_lpn_friend_request(freq, FRIEND_REQUEST_TIMEOUT_MS);
     switch (status)
     {
-        case NRF_SUCCESS:
-            break;
+    case NRF_SUCCESS:
+        break;
 
-        case NRF_ERROR_INVALID_STATE:
-            __LOG(LOG_SRC_APP, LOG_LEVEL_ERROR, "Already in an active friendship\n");
+    case NRF_ERROR_INVALID_STATE:
+        __LOG(LOG_SRC_APP, LOG_LEVEL_ERROR, "Already in an active friendship\n");
 #if SIMPLE_HAL_LEDS_ENABLED
-            hal_led_blink_ms(LEDS_MASK, LED_BLINK_SHORT_INTERVAL_MS, LED_BLINK_CNT_ERROR);
+        hal_led_blink_ms(LEDS_MASK, LED_BLINK_SHORT_INTERVAL_MS, LED_BLINK_CNT_ERROR);
 #endif
-            break;
+        break;
 
-        case NRF_ERROR_INVALID_PARAM:
-            __LOG(LOG_SRC_APP, LOG_LEVEL_ERROR, "Friend request parameters outside of valid ranges.\n");
+    case NRF_ERROR_INVALID_PARAM:
+        __LOG(LOG_SRC_APP, LOG_LEVEL_ERROR, "Friend request parameters outside of valid ranges.\n");
 #if SIMPLE_HAL_LEDS_ENABLED
-            hal_led_blink_ms(LEDS_MASK, LED_BLINK_SHORT_INTERVAL_MS, LED_BLINK_CNT_ERROR);
+        hal_led_blink_ms(LEDS_MASK, LED_BLINK_SHORT_INTERVAL_MS, LED_BLINK_CNT_ERROR);
 #endif
-            break;
+        break;
 
-        default:
-            ERROR_CHECK(status);
-            break;
+    default:
+        ERROR_CHECK(status);
+        break;
     }
 }
 
@@ -144,19 +144,19 @@ static void terminate_friendship()
     uint32_t status = mesh_lpn_friendship_terminate();
     switch (status)
     {
-        case NRF_SUCCESS:
-            break;
+    case NRF_SUCCESS:
+        break;
 
-        case NRF_ERROR_INVALID_STATE:
-            __LOG(LOG_SRC_APP, LOG_LEVEL_ERROR, "Not in an active friendship\n");
+    case NRF_ERROR_INVALID_STATE:
+        __LOG(LOG_SRC_APP, LOG_LEVEL_ERROR, "Not in an active friendship\n");
 #if SIMPLE_HAL_LEDS_ENABLED
-            hal_led_blink_ms(LEDS_MASK, LED_BLINK_SHORT_INTERVAL_MS, LED_BLINK_CNT_ERROR);
+        hal_led_blink_ms(LEDS_MASK, LED_BLINK_SHORT_INTERVAL_MS, LED_BLINK_CNT_ERROR);
 #endif
-            break;
+        break;
 
-        default:
-            ERROR_CHECK(status);
-            break;
+    default:
+        ERROR_CHECK(status);
+        break;
     }
 }
 #endif
@@ -195,11 +195,16 @@ static void button_event_handler(uint32_t button_number)
     {
         __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "Button 3 was pressed \n");
         uint32_t config = get_node_config();
-        uint8_t CHANNEL_1 = (uint8_t)(config >> 0);
-        uint8_t CHANNEL_2 = (uint8_t)(config >> 8);
-        uint8_t CHANNEL_3 = (uint8_t)(config >> 16);
-        uint8_t CHANNEL_4 = (uint8_t)(config >> 24);
-        __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "Channel 1: %u | Channel 2: %u | Channel 3: %u | Channel 4: %u \n", CHANNEL_1, CHANNEL_2, CHANNEL_3, CHANNEL_4);
+        uint8_t CHANNEL_1 = (((uint8_t)(config >> 28)) & 0b00001111);
+        uint8_t CHANNEL_2 = (((uint8_t)(config >> 24)) & 0b00001111);
+        uint8_t CHANNEL_3 = (((uint8_t)(config >> 20)) & 0b00001111);
+        uint8_t CHANNEL_4 = (((uint8_t)(config >> 16)) & 0b00001111);
+        uint8_t LPN_ONOFF = (((uint8_t)(config >> 12)) & 0b00001111);
+        uint8_t LPN_POLL =  (((uint8_t)(config >> 8)) & 0b00001111);
+        uint8_t LPN_DELAY = (((uint8_t)(config >> 4)) & 0b00001111);
+        uint8_t LPN_RX =    (((uint8_t)(config >> 0)) & 0b00001111);
+
+        __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "\n Channel 1: %u | Channel 2: %u | Channel 3: %u | Channel 4: %u \n LPN State: %u | LPN Poll time: %u | LPN Delay: %u | LPN Receive Time: %u \n", CHANNEL_1, CHANNEL_2, CHANNEL_3, CHANNEL_4, LPN_ONOFF, LPN_POLL, LPN_DELAY, LPN_RX);
         break;
     }
 
@@ -359,7 +364,7 @@ static void app_mesh_core_event_cb(const nrf_mesh_evt_t *p_evt)
     }
 }
 
-static nrf_mesh_evt_handler_t m_mesh_core_event_handler = { .evt_cb = app_mesh_core_event_cb };
+static nrf_mesh_evt_handler_t m_mesh_core_event_handler = {.evt_cb = app_mesh_core_event_cb};
 #endif
 
 static void models_init_cb(void)

@@ -349,12 +349,12 @@ void app_model_init(void)
     uint32_t config = get_node_config();
     uint8_t CHANNEL_1 = (uint8_t)(config >> 28);
     uint8_t CHANNEL_2 = (((uint8_t)(config >> 24)) & 0b00001111);
-    uint8_t CHANNEL_3 = (uint8_t)(config >> 20);
-    uint8_t CHANNEL_4 = (uint8_t)(config >> 16);
-    uint8_t LPN_ONOFF = (uint8_t)(config >> 12);
-    uint8_t LPN_POLL =  (uint8_t)(config >>  8);
-    uint8_t LPN_DELAY = (uint8_t)(config >>  4);
-    uint8_t LPN_RX =    (uint8_t)(config >>  0);
+    uint8_t CHANNEL_3 = (((uint8_t)(config >> 20)) & 0b00001111);
+    uint8_t CHANNEL_4 = (((uint8_t)(config >> 16)) & 0b00001111);
+    uint8_t LPN_ONOFF = (((uint8_t)(config >> 12)) & 0b00001111);
+    uint8_t LPN_POLL =  (((uint8_t)(config >>  8)) & 0b00001111);
+    uint8_t LPN_DELAY = (((uint8_t)(config >>  4)) & 0b00001111);
+    uint8_t LPN_RX =    (((uint8_t)(config >>  0)) & 0b00001111);
 
     __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "\n Channel 1: %u | Channel 2: %u | Channel 3: %u | Channel 4: %u \n LPN State: %u | LPN Poll time: %u | LPN Delay: %u | LPN Receive Time: %u \n", CHANNEL_1, CHANNEL_2, CHANNEL_3, CHANNEL_4, LPN_ONOFF, LPN_POLL, LPN_DELAY, LPN_RX);
 
