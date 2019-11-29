@@ -46,6 +46,7 @@
       <file file_name="include/sdk_config.h" />
       <file file_name="src/node_config.c" />
       <file file_name="../../common/src/app_level.c" />
+      <file file_name="src/flash_write.c" />
     </folder>
     <folder Name="Core">
       <file file_name="../../../mesh/core/src/internal_event.c" />
@@ -181,6 +182,7 @@
     <folder Name="Generic OnOff Model">
       <file file_name="../../../models/model_spec/generic_onoff/src/generic_onoff_server.c" />
       <file file_name="../../../models/model_spec/common/src/model_common.c" />
+      <file file_name="../../../models/model_spec/generic_onoff/src/generic_onoff_client.c" />
     </folder>
     <folder Name="Other">
       <file file_name="../../../external/app_timer/app_timer_mesh.c" />

@@ -39,13 +39,14 @@
 #include "mesh_provisionee.h"
 
 /* Models */
-#include "generic_onoff_server.h"
+//#include "generic_onoff_server.h"
 
 /* Logging and RTT */
 #include "log.h"
 #include "rtt_input.h"
 
 /* Example specific includes */
+
 #include "app_config.h"
 #include "app_switch.h"
 #include "ble_softdevice_support.h"
@@ -53,6 +54,13 @@
 #include "example_common.h"
 #include "nrf_mesh_config_examples.h"
 #include "node_config.h"
+
+typedef struct
+{
+    uint32_t config_bit_mask;
+} node_configuration_t;
+
+node_configuration_t config;
 
 static bool m_device_provisioned;
 static void start(void);
@@ -96,18 +104,12 @@ static void button_event_handler(uint32_t button_number)
     case 2:
     {
         __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "Button 3 was pressed \n");
-        __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "state: %u \n", get_node_config());
-
-        uint32_t node_config = get_node_config();
-        uint8_t CHANNEL_1 = (uint8_t)(node_config >> 0);
-        uint8_t CHANNEL_2 = (uint8_t)(node_config >> 8);
-        uint8_t CHANNEL_3 = (uint8_t)(node_config >> 16);
-        uint8_t CHANNEL_4 = (uint8_t)(node_config >> 24);
-
-        __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "Channel 1: %u \n", CHANNEL_1);
-        __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "Channel 2: %u \n", CHANNEL_2);
-        __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "Channel 3: %u \n", CHANNEL_3);
-        __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "Channel 4: %u \n", CHANNEL_4);
+        uint32_t config = get_node_config();
+        uint8_t CHANNEL_1 = (uint8_t)(config >> 0);
+        uint8_t CHANNEL_2 = (uint8_t)(config >> 8);
+        uint8_t CHANNEL_3 = (uint8_t)(config >> 16);
+        uint8_t CHANNEL_4 = (uint8_t)(config >> 24);
+        __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "Channel 1: %u | Channel 2: %u | Channel 3: %u | Channel 4: %u \n", CHANNEL_1, CHANNEL_2, CHANNEL_3, CHANNEL_4);
         break;
     }
 
@@ -253,3 +255,98 @@ int main(void)
         (void)sd_app_evt_wait();
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//static void button_event_handler(uint32_t button_number)
+//{
+//    __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "Button %u pressed\n", button_number);
+//
+//    uint32_t status = NRF_SUCCESS;
+//    generic_onoff_set_params_t set_params;
+//    model_transition_t transition_params;
+//    static uint8_t tid = 0;
+//
+//    /* Button 1: On, Button 2: Off, Client[0]
+//     * Button 2: On, Button 3: Off, Client[1]
+//     */
+//
+//    switch(button_number)
+//    {
+//        case 0:
+//        case 2:
+//            set_params.on_off = APP_STATE_ON;
+//            break;
+//
+//        case 1:
+//        case 3:
+//            set_params.on_off = APP_STATE_OFF;
+//            break;
+//    }
+//
+//    set_params.tid = tid++;
+//    transition_params.delay_ms = APP_CONFIG_ONOFF_DELAY_MS;
+//    transition_params.transition_time_ms = APP_CONFIG_ONOFF_TRANSITION_TIME_MS;
+//    __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "Sending msg: ONOFF SET %d\n", set_params.on_off);
+//
+//    switch (button_number)
+//    {
+//        case 0:
+//        case 1:
+//            /* Demonstrate acknowledged transaction, using 1st client model instance */
+//            /* In this examples, users will not be blocked if the model is busy */
+//            (void)access_model_reliable_cancel(m_clients[0].model_handle);
+//            status = generic_onoff_client_set(&m_clients[0], &set_params, &transition_params);
+//            hal_led_pin_set(BSP_LED_0, set_params.on_off);
+//            break;
+//
+//        case 2:
+//        case 3:
+//            /* Demonstrate un-acknowledged transaction, using 2nd client model instance */
+//            status = generic_onoff_client_set_unack(&m_clients[1], &set_params,
+//                                                    &transition_params, APP_UNACK_MSG_REPEAT_COUNT);
+//            hal_led_pin_set(BSP_LED_1, set_params.on_off);
+//            break;
+//    }
+//
+//    switch (status)
+//    {
+//        case NRF_SUCCESS:
+//            break;
+//
+//        case NRF_ERROR_NO_MEM:
+//        case NRF_ERROR_BUSY:
+//        case NRF_ERROR_INVALID_STATE:
+//            __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "Client %u cannot send\n", button_number);
+//            hal_led_blink_ms(LEDS_MASK, LED_BLINK_SHORT_INTERVAL_MS, LED_BLINK_CNT_NO_REPLY);
+//            break;
+//
+//        case NRF_ERROR_INVALID_PARAM:
+//            /* Publication not enabled for this client. One (or more) of the following is wrong:
+//             * - An application key is missing, or there is no application key bound to the model
+//             * - The client does not have its publication state set
+//             *
+//             * It is the provisioner that adds an application key, binds it to the model and sets
+//             * the model's publication state.
+//             */
+//            __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "Publication not configured for client %u\n", button_number);
+//            break;
+//
+//        default:
+//            ERROR_CHECK(status);
+//            break;
+//    }
+//}
