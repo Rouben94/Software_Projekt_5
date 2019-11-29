@@ -361,13 +361,16 @@ static void start(void)
     hal_led_blink_ms(LEDS_MASK, LED_BLINK_INTERVAL_MS, LED_BLINK_CNT_START);
 }
 
+
 int main(void)
-{
+{   
+     //sd_power_dcdc_mode_set(NRF_POWER_DCDC_ENABLE);
     initialize();
     start();
 
     for (;;)
     {
         (void)sd_app_evt_wait();
+        //__WFE();
     }
 }
