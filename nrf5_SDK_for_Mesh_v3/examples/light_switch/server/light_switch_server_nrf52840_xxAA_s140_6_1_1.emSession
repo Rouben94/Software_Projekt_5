@@ -57,7 +57,8 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="59" y="263" useTextEdit="1" useBinaryEdit="0" left="0" path="src/main.c" selected="1" top="251" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="284" useTextEdit="1" useBinaryEdit="0" left="0" path="src/main.c" selected="1" top="3" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="61" useTextEdit="1" useBinaryEdit="0" left="0" path="../../common/src/rtt_input.c" selected="0" top="48" codecName="Default"/>
  </Files>
  <ARMCrossStudioWindow activeProject="light_switch_server_nrf52840_xxAA_s140_6.1.1" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Debug" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="C:/Program Files/SEGGER/SEGGER Embedded Studio for ARM 4.30/source" debugSearchPath="" autoConnectCapabilities="3199"/>
 </session>

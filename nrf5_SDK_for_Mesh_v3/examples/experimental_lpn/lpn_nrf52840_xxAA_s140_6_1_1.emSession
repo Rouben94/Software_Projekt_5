@@ -1,7 +1,9 @@
 <!DOCTYPE CrossStudio_Session_File>
 <session>
  <Bookmarks/>
- <Breakpoints groups="Breakpoints" active_group="Breakpoints"/>
+ <Breakpoints groups="Breakpoints" active_group="Breakpoints">
+  <Exceptions set="MemManage;UsageFault_Coprocessor;UsageFault_CheckingError;UsageFault_StateError;BusFault;ExceptionEntryReturnFault;HardFault"/>
+ </Breakpoints>
  <ExecutionProfileWindow/>
  <FrameBufferWindow>
   <FrameBufferWindow bufferHeight="-1" addressSpace="" addressText="" bufferWidth="-1"/>
@@ -55,15 +57,16 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="12" y="14" useTextEdit="1" useBinaryEdit="0" left="0" path="../../doc/getting_started/SES.md" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="606" useTextEdit="1" useBinaryEdit="0" left="0" path="src/main.c" selected="1" top="596" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="150" useTextEdit="1" useBinaryEdit="0" left="0" path="include/nrf_mesh_config_app.h" selected="0" top="137" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="5" y="81" useTextEdit="1" useBinaryEdit="0" left="0" path="../common/src/app_error_weak.c" selected="0" top="59" codecName=""/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="384" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../../IoTDevices/Microcontroller/nRF5_SDK_15.3.0_59ac345/components/toolchain/cmsis/include/cmsis_gcc.h" selected="0" top="371" codecName=""/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="28" y="6226" useTextEdit="1" useBinaryEdit="0" left="0" path="include/sdk_config.h" selected="0" top="6218" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="52" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../../IoTDevices/Microcontroller/nRF5_SDK_15.3.0_59ac345/components/libraries/log/nrf_log_backend_interface.h" selected="0" top="37" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="19" y="757" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../../IoTDevices/Microcontroller/nRF5_SDK_15.3.0_59ac345/components/softdevice/s140/headers/nrf_soc.h" selected="0" top="747" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="14" useTextEdit="1" useBinaryEdit="0" left="0" path="../../doc/getting_started/SES.md" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="545" useTextEdit="1" useBinaryEdit="0" left="0" path="src/main.c" selected="0" top="522" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="177" useTextEdit="1" useBinaryEdit="0" left="0" path="include/nrf_mesh_config_app.h" selected="0" top="158" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="81" useTextEdit="1" useBinaryEdit="0" left="0" path="../common/src/app_error_weak.c" selected="0" top="59" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="16" y="46" useTextEdit="1" useBinaryEdit="0" left="0" path="include/sdk_config.h" selected="0" top="39" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="11" useTextEdit="1" useBinaryEdit="0" left="0" path="../../mesh/core/api/mesh_lpn.h" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../nRF5_SDK_15.3.0_59ac345/components/libraries/pwr_mgmt/nrf_pwr_mgmt.h" selected="0" top="81" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="41" useTextEdit="1" useBinaryEdit="0" left="0" path="../../mesh/core/api/nrf_mesh_events.h" selected="0" top="20" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="46" useTextEdit="1" useBinaryEdit="0" left="0" path="../../mesh/core/src/lpn.c" selected="0" top="33" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="include/app_config.h" selected="1" top="36" codecName="Default"/>
  </Files>
- <ARMCrossStudioWindow activeProject="lpn_nrf52840_xxAA_s140_6.1.1" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Debug" debugSearchFileMap="" fileDialogInitialDirectory="" debugSearchPath="" autoConnectCapabilities="3711"/>
+ <ARMCrossStudioWindow activeProject="lpn_nrf52840_xxAA_s140_6.1.1" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Debug" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="" debugSearchPath="" autoConnectCapabilities="3199"/>
 </session>
