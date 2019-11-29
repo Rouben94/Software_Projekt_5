@@ -64,10 +64,15 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="239" useTextEdit="1" useBinaryEdit="0" left="0" path="src/main.c" selected="1" top="66" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="106" y="603" useTextEdit="1" useBinaryEdit="0" left="0" path="src/node_config.c" selected="0" top="586" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="../../common/src/app_switch.c" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="../../common/include/app_switch.h" selected="0" top="104" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="37" y="23" useTextEdit="1" useBinaryEdit="0" left="0" path="src/main.c" selected="1" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="64" y="350" useTextEdit="1" useBinaryEdit="0" left="0" path="src/node_config.c" selected="0" top="333" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="161" useTextEdit="1" useBinaryEdit="0" left="0" path="include/nrf_mesh_config_app.h" selected="0" top="144" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="72" y="30" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../mesh/core/api/mesh_lpn.h" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="21" useTextEdit="1" useBinaryEdit="0" left="0" path="blueseidon_test_server_nrf52840_xxAA_s140_6.1.1_Release.jlink.emProject" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="537" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../mesh/core/api/nrf_mesh_events.h" selected="0" top="516" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="157" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../mesh/core/api/mesh_lpn.h" selected="0" top="136" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="30" y="6234" useTextEdit="1" useBinaryEdit="0" left="0" path="include/sdk_config.h" selected="0" top="6209" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="include/app_config.h" selected="0" top="0" codecName="Default"/>
  </Files>
- <ARMCrossStudioWindow activeProject="blueseidon_test_server_nrf52840_xxAA_s140_6.1.1" fileDialogDefaultFilter="" autoConnectTarget="J-Link" buildConfiguration="Debug" sessionSettings="" debugSearchFileMap="/Applications/SEGGER Embedded Studio for ARM 4.18/source/thumb_crt0.s&#xa;C:/Program Files/SEGGER/SEGGER Embedded Studio for ARM 4.30/source/thumb_crt0.s&#xa;/Users/robin/Git/P5/Software_Node/nRF5_SDK_15.3.0_59ac345/modules/nrfx/mdk/ses_startup_nrf52840.s&#xa;C:/Users/bobst_pch6yla/Documents/Git/Software_Node_Projekt_5/nRF5_SDK_15.3.0_59ac345/modules/nrfx/mdk/ses_startup_nrf52840.s" fileDialogInitialDirectory="C:/Users/bobst_pch6yla/Documents/Git/Software_Projekt_5/nrf5_SDK_for_Mesh_v3/models/model_spec/generic_onoff/src" debugSearchPath="" autoConnectCapabilities="3711"/>
+ <ARMCrossStudioWindow activeProject="blueseidon_test_server_nrf52840_xxAA_s140_6.1.1" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Debug" sessionSettings="" debugSearchFileMap="/Applications/SEGGER Embedded Studio for ARM 4.18/source/thumb_crt0.s&#xa;C:/Program Files/SEGGER/SEGGER Embedded Studio for ARM 4.30/source/thumb_crt0.s&#xa;/Users/robin/Git/P5/Software_Node/nRF5_SDK_15.3.0_59ac345/modules/nrfx/mdk/ses_startup_nrf52840.s&#xa;C:/Users/bobst_pch6yla/Documents/Git/Software_Node_Projekt_5/nRF5_SDK_15.3.0_59ac345/modules/nrfx/mdk/ses_startup_nrf52840.s" fileDialogInitialDirectory="C:/Users/bobst_pch6yla/Documents/Git/Software_Projekt_5/nrf5_SDK_for_Mesh_v3/models/model_spec/generic_onoff/src" debugSearchPath="" autoConnectCapabilities="3711"/>
 </session>

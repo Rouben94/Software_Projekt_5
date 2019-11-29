@@ -348,7 +348,7 @@ void app_model_init(void)
     node_config_flash_init();
     uint32_t config = get_node_config();
     uint8_t CHANNEL_1 = (uint8_t)(config >> 28);
-    uint8_t CHANNEL_2 = (uint8_t)(config >> 24);
+    uint8_t CHANNEL_2 = (((uint8_t)(config >> 24)) & 0b00001111);
     uint8_t CHANNEL_3 = (uint8_t)(config >> 20);
     uint8_t CHANNEL_4 = (uint8_t)(config >> 16);
     uint8_t LPN_ONOFF = (uint8_t)(config >> 12);
