@@ -16,12 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef APP_SWITCH_H__
-#define APP_SWITCH_H__
+#ifndef APP_SWITCH_CLIENT_H__
+#define APP_SWITCH_CLIENT_H__
 
 #include <stdint.h>
 
-#include "generic_onoff_server.h"
+#include "generic_onoff_client.h"
 #include "app_timer.h"
 
 
@@ -66,9 +66,9 @@
  * @param[in] _get_cb               Callback for reading the state from the application.
 */
 
-#define APP_SWITCH_SERVER_DEF(_name, _force_segmented, _mic_size, _set_cb, _get_cb)  \
+#define APP_SWITCH_CLIENT_DEF(_name, _force_segmented, _mic_size, _set_cb, _get_cb)  \
     APP_TIMER_DEF(_name ## _timer); \
-    static app_switch_server_t _name =  \
+    static app_switch_client_t _name =  \
     {  \
         .server.settings.force_segmented = _force_segmented,  \
         .server.settings.transmic_size = _mic_size,  \

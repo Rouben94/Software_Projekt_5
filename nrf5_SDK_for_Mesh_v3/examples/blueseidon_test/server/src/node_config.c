@@ -34,7 +34,7 @@
 
 /* Example specific includes */
 #include "app_level_userdefined.h"
-#include "app_switch.h"
+#include "app_switch_client.h"
 #include "example_common.h"
 #include "flash_write.h"
 #include "node_config.h"
@@ -269,7 +269,7 @@ static void app_level_server_4_get_cb(const app_level_server_t *p_server, uint32
 //#define APP_UNACK_MSG_REPEAT_COUNT (2)
 //
 //static generic_onoff_client_t m_clients;
-//
+
 ///* Forward declaration */
 //static void app_gen_onoff_client_publish_interval_cb(access_model_handle_t handle, void *p_self);
 //static void app_generic_onoff_client_status_cb(const generic_onoff_client_t *p_self,

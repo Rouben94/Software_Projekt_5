@@ -16,13 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "app_switch.h"
+#include "app_switch_client.h"
 
 #include <stdint.h>
 
 #include "sdk_config.h"
 #include "example_common.h"
-#include "generic_onoff_server.h"
+#include "generic_onoff_client.h"
 
 #include "log.h"
 #include "app_timer.h"
@@ -32,22 +32,22 @@
  */
 
 /* Forward declaration */
-static void generic_onoff_state_get_cb(const generic_onoff_server_t * p_self,
-                                       const access_message_rx_meta_t * p_meta,
-                                       generic_onoff_status_params_t * p_out);
-static void generic_onoff_state_set_cb(const generic_onoff_server_t * p_self,
-                                       const access_message_rx_meta_t * p_meta,
-                                       const generic_onoff_set_params_t * p_in,
-                                       const model_transition_t * p_in_transition,
-                                       generic_onoff_status_params_t * p_out);
+static void app_gen_onoff_client_publish_interval_cb(access_model_handle_t handle, void *p_self);
+static void app_generic_onoff_client_status_cb(const generic_onoff_client_t *p_self,
+    const access_message_rx_meta_t *p_meta,
+    const generic_onoff_status_params_t *p_in);
+static void app_gen_onoff_client_transaction_status_cb(access_model_handle_t model_handle,
+    void *p_args,
+    access_reliable_status_t status);
 
-const generic_onoff_server_callbacks_t onoff_srv_cbs =
+const generic_onoff_client_callbacks_t client_cbs =
 {
-    .onoff_cbs.set_cb = generic_onoff_state_set_cb,
-    .onoff_cbs.get_cb = generic_onoff_state_get_cb
+    .onoff_status_cb = app_generic_onoff_client_status_cb,
+    .ack_transaction_status_cb = app_gen_onoff_client_transaction_status_cb,
+    .periodic_publish_cb = app_gen_onoff_client_publish_interval_cb
 };
 
-static void switch_state_process_timing(app_switch_server_t * p_server)
+static void switch_client_state_process_timing(app_switch_server_t * p_server)
 {
     uint32_t status = NRF_SUCCESS;
 
@@ -86,7 +86,7 @@ static void switch_state_process_timing(app_switch_server_t * p_server)
     }
 }
 
-static void switch_state_value_update(app_switch_server_t * p_server)
+static void switch_client_state_value_update(app_switch_server_t * p_server)
 {
     /* Requirement: If delay and transition time is zero, current state changes to the target state. */
     if ((p_server->state.delay_ms == 0 && p_server->state.remaining_time_ms == 0) ||
@@ -114,106 +114,61 @@ static void switch_state_value_update(app_switch_server_t * p_server)
           p_server->state.present_switch, p_server->state.target_switch, p_server->state.delay_ms, p_server->state.remaining_time_ms);
 }
 
-static void switch_state_timer_cb(void * p_context)
+/* This callback is called periodically if model is configured for periodic publishing */
+static void app_gen_onoff_client_publish_interval_cb(access_model_handle_t handle, void *p_self)
 {
-    app_switch_server_t * p_server = (app_switch_server_t *) p_context;
-
-    /* Requirement: Process timing. Process the delay first (Non-zero delay will delay the required
-     * state transition by the specified amount) and then the transition time.
-     */
-    if (p_server->state.delay_ms != 0)
-    {
-        p_server->state.delay_ms = 0;
-        switch_state_value_update(p_server);
-    }
-    else if (p_server->state.remaining_time_ms != 0)
-    {
-        if (APP_TIMER_TICKS(p_server->state.remaining_time_ms) > APP_TIMER_MAX_CNT_VAL)
-        {
-            p_server->state.remaining_time_ms -= (APP_TIMER_MAX_CNT_VAL/APP_TIMER_CLOCK_FREQ);
-        }
-        else
-        {
-            p_server->state.remaining_time_ms = 0;
-            switch_state_value_update(p_server);
-        }
-    }
-    switch_state_process_timing(p_server);
+    __LOG(LOG_SRC_APP, LOG_LEVEL_WARN, "Publish desired message here.\n");
 }
 
-
-/***** Generic OnOff model interface callbacks *****/
-static void generic_onoff_state_get_cb(const generic_onoff_server_t * p_self,
-                                       const access_message_rx_meta_t * p_meta,
-                                       generic_onoff_status_params_t * p_out)
+/* Acknowledged transaction status callback, if acknowledged transfer fails, application can
+* determine suitable course of action (e.g. re-initiate previous transaction) by using this
+* callback.
+*/
+static void app_gen_onoff_client_transaction_status_cb(access_model_handle_t model_handle,
+    void *p_args,
+    access_reliable_status_t status)
 {
-    __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "msg: GET \n");
-
-    app_switch_server_t   * p_server = PARENT_BY_FIELD_GET(app_switch_server_t, server, p_self);
-
-    /* Requirement: Provide the current value of the OnOff state */
-    p_server->switch_get_cb(p_server, &p_server->state.present_switch);
-    p_out->present_on_off = p_server->state.present_switch;
-    p_out->target_on_off = p_server->state.target_switch;
-
-    /* Requirement: Always report remaining time */
-    if (p_server->state.remaining_time_ms > 0 && p_server->state.delay_ms == 0)
+    switch (status)
     {
-        uint32_t delta = (1000ul * app_timer_cnt_diff_compute(app_timer_cnt_get(), p_server->last_rtc_counter)) / APP_TIMER_CLOCK_FREQ;
-        if (p_server->state.remaining_time_ms >= delta && delta > 0)
-        {
-            p_out->remaining_time_ms = p_server->state.remaining_time_ms - delta;
-        }
-        else
-        {
-            p_out->remaining_time_ms = 0;
-        }
+    case ACCESS_RELIABLE_TRANSFER_SUCCESS:
+        __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "Acknowledged transfer success.\n");
+        break;
+
+    case ACCESS_RELIABLE_TRANSFER_TIMEOUT:
+        hal_led_blink_ms(LEDS_MASK, LED_BLINK_SHORT_INTERVAL_MS, LED_BLINK_CNT_NO_REPLY);
+        __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "Acknowledged transfer timeout.\n");
+        break;
+
+    case ACCESS_RELIABLE_TRANSFER_CANCELLED:
+        __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "Acknowledged transfer cancelled.\n");
+        break;
+
+    default:
+        ERROR_CHECK(NRF_ERROR_INTERNAL);
+        break;
+    }
+}
+
+/* Generic OnOff client model interface: Process the received status message in this callback */
+static void app_generic_onoff_client_status_cb(const generic_onoff_client_t *p_self,
+    const access_message_rx_meta_t *p_meta,
+    const generic_onoff_status_params_t *p_in)
+{
+    if (p_in->remaining_time_ms > 0)
+    {
+        __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "OnOff server: 0x%04x, Present OnOff: %d, Target OnOff: %d, Remaining Time: %d ms\n",
+            p_meta->src.value, p_in->present_on_off, p_in->target_on_off, p_in->remaining_time_ms);
     }
     else
     {
-        p_out->remaining_time_ms = p_server->state.remaining_time_ms;
+        __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "OnOff server: 0x%04x, Present OnOff: %d\n",
+            p_meta->src.value, p_in->present_on_off);
     }
 }
 
-static void generic_onoff_state_set_cb(const generic_onoff_server_t * p_self,
-                                       const access_message_rx_meta_t * p_meta,
-                                       const generic_onoff_set_params_t * p_in,
-                                       const model_transition_t * p_in_transition,
-                                       generic_onoff_status_params_t * p_out)
-{
-    __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "msg: SET: %d\n", p_in->on_off);
-
-    app_switch_server_t   * p_server = PARENT_BY_FIELD_GET(app_switch_server_t, server, p_self);
-
-    /* Update internal representation of OnOff value, process timing */
-    p_server->value_updated = false;
-    p_server->state.target_switch = p_in->on_off;
-    if (p_in_transition == NULL)
-    {
-        p_server->state.delay_ms = 0;
-        p_server->state.remaining_time_ms = 0;
-    }
-    else
-    {
-        p_server->state.delay_ms = p_in_transition->delay_ms;
-        p_server->state.remaining_time_ms = p_in_transition->transition_time_ms;
-    }
-
-    switch_state_value_update(p_server);
-    switch_state_process_timing(p_server);
-
-    /* Prepare response */
-    if (p_out != NULL)
-    {
-        p_out->present_on_off = p_server->state.present_switch;
-        p_out->target_on_off = p_server->state.target_switch;
-        p_out->remaining_time_ms = p_server->state.remaining_time_ms;
-    }
-}
 
 /***** Interface functions *****/
-
-void app_switch_status_publish(app_switch_server_t * p_server)
+void app_switch_client_status_publish(app_switch_server_t * p_server)
 {
     p_server->switch_get_cb(p_server, &p_server->state.present_switch);
 
@@ -230,7 +185,7 @@ void app_switch_status_publish(app_switch_server_t * p_server)
     (void) generic_onoff_server_status_publish(&p_server->server, &status);
 }
 
-uint32_t app_switch_init(app_switch_server_t * p_server, uint8_t element_index)
+uint32_t app_switch_client_init(app_switch_server_t * p_server, uint8_t element_index)
 {
     uint32_t status = NRF_ERROR_INTERNAL;
 
