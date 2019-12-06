@@ -16,8 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/** LPN feature */
-#define MESH_FEATURE_LPN_ENABLED 0
+///** LPN feature */
+//#define MESH_FEATURE_LPN_ENABLED 1
 
 // Did not enter Sleep ?
 // Set bit 7 and bits 4..0 in the mask to one (0x ...00 1001 1111)
