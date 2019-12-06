@@ -92,7 +92,7 @@ typedef struct
 } app_switch_state_t;
 
 /* Forward declaration */
-typedef struct __app_switch_server_t app_switch_server_t;
+typedef struct __app_switch_client_t app_switch_client_t;
 
 /** Application state set callback prototype.
  *

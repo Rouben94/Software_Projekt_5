@@ -32,13 +32,16 @@
  */
 
 /* Forward declaration */
-static void app_gen_onoff_client_publish_interval_cb(access_model_handle_t handle, void *p_self);
-static void app_generic_onoff_client_status_cb(const generic_onoff_client_t *p_self,
-    const access_message_rx_meta_t *p_meta,
-    const generic_onoff_status_params_t *p_in);
+static void genric_onoff_client_publish_interval_cb(access_model_handle_t handle, 
+                                                    void *p_self);
+
+static void generic_onoff_client_status_cb(const generic_onoff_client_t *p_self,
+                                           const access_message_rx_meta_t *p_meta,
+                                           const generic_onoff_status_params_t *p_in);
+
 static void app_gen_onoff_client_transaction_status_cb(access_model_handle_t model_handle,
-    void *p_args,
-    access_reliable_status_t status);
+                                                       void *p_args,
+                                                       access_reliable_status_t status);
 
 const generic_onoff_client_callbacks_t client_cbs =
 {

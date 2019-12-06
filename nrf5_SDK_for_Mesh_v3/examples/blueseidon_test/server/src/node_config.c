@@ -34,7 +34,7 @@
 
 /* Example specific includes */
 #include "app_level_userdefined.h"
-#include "app_switch_client.h"
+#include "app_switch.h"
 #include "example_common.h"
 #include "flash_write.h"
 #include "node_config.h"

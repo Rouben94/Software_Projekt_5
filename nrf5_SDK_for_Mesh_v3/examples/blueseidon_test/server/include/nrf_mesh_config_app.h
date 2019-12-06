@@ -162,6 +162,14 @@
 #define MESH_FEATURE_FRIEND_ENABLED (1)
 
 /**
+ * @defgroup MESH_CONFIG_FRIENDSHIP Friendship configuration defines
+ * @{
+ */
+
+/** LPN feature */
+#define MESH_FEATURE_LPN_ENABLED 1
+
+/**
  * @defgroup BLE_SOFTDEVICE_SUPPORT_CONFIG BLE SoftDevice support module configuration.
  * @ingroup MESH_API_GROUP_APP_SUPPORT
  * Configuration for compile time. Part of BLE SoftDevice support module.
