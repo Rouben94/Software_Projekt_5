@@ -64,7 +64,7 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="34" y="177" useTextEdit="1" useBinaryEdit="0" left="0" path="src/main.c" selected="1" top="156" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="177" useTextEdit="1" useBinaryEdit="0" left="0" path="src/main.c" selected="1" top="156" codecName="Default"/>
  </Files>
- <ARMCrossStudioWindow activeProject="blueseidon_test_server_nrf52840_xxAA_s140_6.1.1" fileDialogDefaultFilter="" autoConnectTarget="J-Link" buildConfiguration="Debug" sessionSettings="" debugSearchFileMap="/Applications/SEGGER Embedded Studio for ARM 4.18/source/thumb_crt0.s&#xa;C:/Program Files/SEGGER/SEGGER Embedded Studio for ARM 4.30/source/thumb_crt0.s&#xa;/Users/robin/Git/P5/Software_Node/nRF5_SDK_15.3.0_59ac345/modules/nrfx/mdk/ses_startup_nrf52840.s&#xa;C:/Users/bobst_pch6yla/Documents/Git/Software_Node_Projekt_5/nRF5_SDK_15.3.0_59ac345/modules/nrfx/mdk/ses_startup_nrf52840.s" fileDialogInitialDirectory="C:/GitHub/Software_Projekt_5/nrf5_SDK_for_Mesh_v3/examples/common/src" debugSearchPath="" autoConnectCapabilities="3711"/>
+ <ARMCrossStudioWindow activeProject="blueseidon_test_server_nrf52840_xxAA_s140_6.1.1" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Debug" sessionSettings="" debugSearchFileMap="/Applications/SEGGER Embedded Studio for ARM 4.18/source/thumb_crt0.s&#xa;C:/Program Files/SEGGER/SEGGER Embedded Studio for ARM 4.30/source/thumb_crt0.s&#xa;/Users/robin/Git/P5/Software_Node/nRF5_SDK_15.3.0_59ac345/modules/nrfx/mdk/ses_startup_nrf52840.s&#xa;C:/Users/bobst_pch6yla/Documents/Git/Software_Node_Projekt_5/nRF5_SDK_15.3.0_59ac345/modules/nrfx/mdk/ses_startup_nrf52840.s" fileDialogInitialDirectory="C:/GitHub/Software_Projekt_5/nrf5_SDK_for_Mesh_v3/examples/common/src" debugSearchPath="" autoConnectCapabilities="3199"/>
 </session>
