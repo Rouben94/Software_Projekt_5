@@ -16,6 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <stdint.h>
+#include <string.h>
+
+#include "flash_write.h"
+
 /* Core */
 #include "mesh_stack.h"
 
@@ -27,7 +32,6 @@
 
 /* Example specific includes */
 #include "flash_manager.h" // For storing custom data in flash.
-#include "flash_write.h"
 
 typedef struct
 {

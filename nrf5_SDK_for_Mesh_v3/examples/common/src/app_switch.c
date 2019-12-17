@@ -16,9 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "app_switch.h"
-
 #include <stdint.h>
+
+#include "app_switch.h"
 
 #include "sdk_config.h"
 #include "example_common.h"

@@ -193,6 +193,7 @@
     </folder>
     <folder Name="Generic Level Model">
       <file file_name="../../../models/model_spec/generic_level/src/generic_level_server.c" />
+      <file file_name="../../../models/model_spec/generic_level/src/generic_level_client.c" />
     </folder>
   </project>
   <configuration
