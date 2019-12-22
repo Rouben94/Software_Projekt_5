@@ -115,14 +115,6 @@ uint8_t get_node_configuration(int CONFIG) {
 //static void app_level_config_server_set_cb(const app_level_server_t *p_server, uint32_t present_level);
 //static void app_level_config_server_get_cb(const app_level_server_t *p_server, uint32_t *p_present_level);
 
-/* Application level generic level server structure definition and initialization */
-//APP_LEVEL_SERVER_DEF(m_level_server_0,
-//    APP_CONFIG_FORCE_SEGMENTATION,
-//    APP_CONFIG_MIC_SIZE,
-//    NULL,
-//    app_level_config_server_set_cb,
-//    app_level_config_server_get_cb);
-
 /* Callback for updating the hardware state */
 static void app_level_config_server_set_cb(const app_level_server_t *p_server, uint32_t present_level) {
   /* Resolve the server instance here if required, this example uses only 1 instance. */
@@ -136,43 +128,6 @@ static void app_level_config_server_get_cb(const app_level_server_t *p_server, u
 }
 /*******************************************END***************************************************/
 /******************************Initialisation of SWITCH server MODEL******************************/
-//static void app_switch_server_1_set_cb(const app_switch_server_t *p_server, bool switch_state);
-//static void app_switch_server_1_get_cb(const app_switch_server_t *p_server, bool *p_present_switch);
-//
-//static void app_switch_server_2_set_cb(const app_switch_server_t *p_server, bool switch_state);
-//static void app_switch_server_2_get_cb(const app_switch_server_t *p_server, bool *p_present_switch);
-//
-//static void app_switch_server_3_set_cb(const app_switch_server_t *p_server, bool switch_state);
-//static void app_switch_server_3_get_cb(const app_switch_server_t *p_server, bool *p_present_switch);
-//
-//static void app_switch_server_4_set_cb(const app_switch_server_t *p_server, bool switch_state);
-//static void app_switch_server_4_get_cb(const app_switch_server_t *p_server, bool *p_present_switch);
-//
-///* Generic switch server structure definition and initialization */
-//APP_SWITCH_SERVER_DEF(m_switch_server_1,
-//    APP_CONFIG_FORCE_SEGMENTATION,
-//    APP_CONFIG_MIC_SIZE,
-//    app_switch_server_1_set_cb,
-//    app_switch_server_1_get_cb)
-//
-//APP_SWITCH_SERVER_DEF(m_switch_server_2,
-//    APP_CONFIG_FORCE_SEGMENTATION,
-//    APP_CONFIG_MIC_SIZE,
-//    app_switch_server_2_set_cb,
-//    app_switch_server_2_get_cb)
-//
-//APP_SWITCH_SERVER_DEF(m_switch_server_3,
-//    APP_CONFIG_FORCE_SEGMENTATION,
-//    APP_CONFIG_MIC_SIZE,
-//    app_switch_server_3_set_cb,
-//    app_switch_server_3_get_cb)
-//
-//APP_SWITCH_SERVER_DEF(m_switch_server_4,
-//    APP_CONFIG_FORCE_SEGMENTATION,
-//    APP_CONFIG_MIC_SIZE,
-//    app_switch_server_4_set_cb,
-//    app_switch_server_4_get_cb)
-
 /* Callback for updating the hardware state */
 static void app_switch_server_1_set_cb(const app_switch_server_t *p_server, bool switch_state) {
   __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "Setting GPIO value: %d\n", switch_state)
@@ -222,47 +177,6 @@ static void app_switch_server_4_get_cb(const app_switch_server_t *p_server, bool
 }
 /*******************************************END***************************************************/
 /******************************Initialisation of LEVEL server MODEL*******************************/
-//static void app_level_server_1_set_cb(const app_level_server_t *p_server, uint32_t present_level);
-//static void app_level_server_1_get_cb(const app_level_server_t *p_server, uint32_t *present_level);
-//
-//static void app_level_server_2_set_cb(const app_level_server_t *p_server, uint32_t present_level);
-//static void app_level_server_2_get_cb(const app_level_server_t *p_server, uint32_t *present_level);
-//
-//static void app_level_server_3_set_cb(const app_level_server_t *p_server, uint32_t present_level);
-//static void app_level_server_3_get_cb(const app_level_server_t *p_server, uint32_t *present_level);
-//
-//static void app_level_server_4_set_cb(const app_level_server_t *p_server, uint32_t present_level);
-//static void app_level_server_4_get_cb(const app_level_server_t *p_server, uint32_t *present_level);
-
-/* Generic switch server structure definition and initialization */
-//APP_LEVEL_SERVER_DEF(m_level_server_1,
-//    APP_CONFIG_FORCE_SEGMENTATION,
-//    APP_CONFIG_MIC_SIZE,
-//    NULL,
-//    app_level_server_1_set_cb,
-//    app_level_server_1_get_cb)
-//
-//APP_LEVEL_SERVER_DEF(m_level_server_2,
-//    APP_CONFIG_FORCE_SEGMENTATION,
-//    APP_CONFIG_MIC_SIZE,
-//    NULL,
-//    app_level_server_2_set_cb,
-//    app_level_server_2_get_cb)
-//
-//APP_LEVEL_SERVER_DEF(m_level_server_3,
-//    APP_CONFIG_FORCE_SEGMENTATION,
-//    APP_CONFIG_MIC_SIZE,
-//    NULL,
-//    app_level_server_3_set_cb,
-//    app_level_server_3_get_cb)
-//
-//APP_LEVEL_SERVER_DEF(m_level_server_4,
-//    APP_CONFIG_FORCE_SEGMENTATION,
-//    APP_CONFIG_MIC_SIZE,
-//    NULL,
-//    app_level_server_4_set_cb,
-//    app_level_server_4_get_cb)
-
 /* Callback for updating the hardware state */
 static void app_level_server_1_set_cb(const app_level_server_t *p_server, uint32_t present_level) {
   __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "Setting GPIO value: %d\n", present_level)
@@ -463,44 +377,28 @@ void app_model_init(void) {
                                                                                       app_level_server_3_get_cb, app_level_server_4_get_cb};
 
     APP_TIMER_DEF (switch_server_timer_1);
-    m_switch_servers[1].p_timer_id = &switch_server_timer_1;
-//    m_switch_servers[1].switch_set_cb = app_switch_server_1_set_cb;
-//    m_switch_servers[1].switch_get_cb = app_switch_server_1_get_cb;
+    m_switch_servers[0].p_timer_id = &switch_server_timer_1;
 
     APP_TIMER_DEF (switch_server_timer_2);
-    m_switch_servers[2].p_timer_id = &switch_server_timer_2;
-//    m_switch_servers[2].switch_set_cb = app_switch_server_2_set_cb;
-//    m_switch_servers[2].switch_get_cb = app_switch_server_2_get_cb;
+    m_switch_servers[1].p_timer_id = &switch_server_timer_2;
 
     APP_TIMER_DEF (switch_server_timer_3);
-    m_switch_servers[3].p_timer_id = &switch_server_timer_3;
-//    m_switch_servers[3].switch_set_cb = app_switch_server_3_set_cb;
-//    m_switch_servers[3].switch_get_cb = app_switch_server_3_get_cb;
+    m_switch_servers[2].p_timer_id = &switch_server_timer_3;
 
     APP_TIMER_DEF (switch_server_timer_4);
-    m_switch_servers[4].p_timer_id = &switch_server_timer_4;
-//    m_switch_servers[4].switch_set_cb = app_switch_server_4_set_cb;
-//    m_switch_servers[4].switch_get_cb = app_switch_server_4_get_cb;
+    m_switch_servers[3].p_timer_id = &switch_server_timer_4;
 
     APP_TIMER_DEF (level_server_timer_1);
     m_level_servers[1].timer.p_timer_id = &level_server_timer_1;
-//    m_level_servers[1].level_set_cb = app_level_server_1_set_cb;
-//    m_level_servers[1].level_get_cb = app_level_server_1_get_cb;
 
     APP_TIMER_DEF (level_server_timer_2);
     m_level_servers[2].timer.p_timer_id = &level_server_timer_2;
-//    m_level_servers[2].level_set_cb = app_level_server_2_set_cb;
-//    m_level_servers[2].level_get_cb = app_level_server_2_get_cb;
 
     APP_TIMER_DEF (level_server_timer_3);
     m_level_servers[3].timer.p_timer_id = &level_server_timer_3;
-//    m_level_servers[3].level_set_cb = app_level_server_3_set_cb;
-//    m_level_servers[3].level_get_cb = app_level_server_3_get_cb;
 
     APP_TIMER_DEF (level_server_timer_4);
     m_level_servers[4].timer.p_timer_id = &level_server_timer_4;
-//    m_level_servers[4].level_set_cb = app_level_server_4_set_cb;
-//    m_level_servers[4].level_get_cb = app_level_server_4_get_cb;
 
   for(int i=0; i<4; i++){
       if (get_node_configuration(i) == SWITCH_SERVER_CONFIG) {
@@ -519,7 +417,7 @@ void app_model_init(void) {
         m_switch_clients[i].settings.transmic_size = APP_CONFIG_MIC_SIZE;
 
         ERROR_CHECK(generic_onoff_client_init(&m_switch_clients[i], (i+1)));
-        __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "App onoff client Model %d Handle: %d\n", (i+1), m_switch_clients[i].model_handle);
+        __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "App switch client Model %d Handle: %d\n", (i+1), m_switch_clients[i].model_handle);
       }
       if (get_node_configuration(i) == LEVEL_SERVER_CONFIG) {
         m_level_servers[i+1].server.settings.force_segmented = APP_CONFIG_FORCE_SEGMENTATION;
@@ -541,102 +439,5 @@ void app_model_init(void) {
         __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "App level client Model %d Handle: %d\n", (i+1), m_level_clients[i].model_handle);
       }
   }
-
-//  if (get_node_configuration(CONFIG_CHANNEL_1) == SWITCH_SERVER_CONFIG) {
-//    /* Instantiate switch server on element index APP_SWITCH_ELEMENT_1 */
-//    ERROR_CHECK(app_switch_init(&m_switch_server_1, APP_ELEMENT_1_INDEX));
-//    __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "App switch Model 1 Handle: %d\n", m_switch_server_1.server.model_handle);
-//  }
-//
-//  if (get_node_configuration(CONFIG_CHANNEL_2) == SWITCH_SERVER_CONFIG) {
-//    /* Instantiate switch server on element index APP_SWITCH_ELEMENT_2 */
-//    ERROR_CHECK(app_switch_init(&m_switch_server_2, APP_ELEMENT_2_INDEX));
-//    __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "App switch Model 2 Handle: %d\n", m_switch_server_2.server.model_handle);
-//  }
-//
-//  if (get_node_configuration(CONFIG_CHANNEL_3) == SWITCH_SERVER_CONFIG) {
-//    /* Instantiate switch server on element index APP_SWITCH_ELEMENT_3 */
-//    ERROR_CHECK(app_switch_init(&m_switch_server_3, APP_ELEMENT_3_INDEX));
-//    __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "App switch Model 3 Handle: %d\n", m_switch_server_3.server.model_handle);
-//  }
-//
-//  if (get_node_configuration(CONFIG_CHANNEL_4) == SWITCH_SERVER_CONFIG) {
-//    /* Instantiate switch server on element index APP_SWITCH_ELEMENT_4 */
-//    ERROR_CHECK(app_switch_init(&m_switch_server_4, APP_ELEMENT_4_INDEX));
-//    __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "App switch Model 4 Handle: %d\n", m_switch_server_4.server.model_handle);
-//  }
-
-//  if (get_node_configuration(CONFIG_CHANNEL_1) == SWITCH_CLIENT_CONFIG) {
-//    m_switch_clients[0].settings.p_callbacks = &switch_client_cbs;
-//    m_switch_clients[0].settings.timeout = 0;
-//    m_switch_clients[0].settings.force_segmented = APP_CONFIG_FORCE_SEGMENTATION;
-//    m_switch_clients[0].settings.transmic_size = APP_CONFIG_MIC_SIZE;
-//
-//    ERROR_CHECK(generic_onoff_client_init(&m_switch_clients[0], APP_ELEMENT_1_INDEX));
-//    __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "App onoff Model client 1 Handle: %d\n", m_switch_clients[0].model_handle);
-//  }
-//
-//  if (get_node_configuration(CONFIG_CHANNEL_2) == SWITCH_CLIENT_CONFIG) {
-//    m_switch_clients[1].settings.p_callbacks = &switch_client_cbs;
-//    m_switch_clients[1].settings.timeout = 0;
-//    m_switch_clients[1].settings.force_segmented = APP_CONFIG_FORCE_SEGMENTATION;
-//    m_switch_clients[1].settings.transmic_size = APP_CONFIG_MIC_SIZE;
-//
-//    ERROR_CHECK(generic_onoff_client_init(&m_switch_clients[1], APP_ELEMENT_2_INDEX));
-//    __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "App onoff Model client 2 Handle: %d\n", m_switch_clients[1].model_handle);
-//  }
-//
-//  if (get_node_configuration(CONFIG_CHANNEL_3) == SWITCH_CLIENT_CONFIG) {
-//    m_switch_clients[2].settings.p_callbacks = &switch_client_cbs;
-//    m_switch_clients[2].settings.timeout = 0;
-//    m_switch_clients[2].settings.force_segmented = APP_CONFIG_FORCE_SEGMENTATION;
-//    m_switch_clients[2].settings.transmic_size = APP_CONFIG_MIC_SIZE;
-//
-//    ERROR_CHECK(generic_onoff_client_init(&m_switch_clients[2], APP_ELEMENT_3_INDEX));
-//    __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "App onoff Model client 3 Handle: %d\n", m_switch_clients[2].model_handle);
-//  }
-//
-//  if (get_node_configuration(CONFIG_CHANNEL_4) == SWITCH_CLIENT_CONFIG) {
-//    m_switch_clients[3].settings.p_callbacks = &switch_client_cbs;
-//    m_switch_clients[3].settings.timeout = 0;
-//    m_switch_clients[3].settings.force_segmented = APP_CONFIG_FORCE_SEGMENTATION;
-//    m_switch_clients[3].settings.transmic_size = APP_CONFIG_MIC_SIZE;
-//
-//    ERROR_CHECK(generic_onoff_client_init(&m_switch_clients[3], APP_ELEMENT_4_INDEX));
-//    __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "App onoff Model client 4 Handle: %d\n", m_switch_clients[3].model_handle);
-//  }
-
-//  if (get_node_configuration(CONFIG_CHANNEL_1) == LEVEL_SERVER_CONFIG) {
-//    /* Instantiate level server on element index APP_LEVEL_ELEMENT_1 */
-//    ERROR_CHECK(app_level_init(&m_level_server_1, APP_ELEMENT_1_INDEX));
-//    __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "App level Model 1 Handle: %d\n", m_level_server_1.server.model_handle);
-//  }
-//
-//  if (get_node_configuration(CONFIG_CHANNEL_2) == LEVEL_SERVER_CONFIG) {
-//    /* Instantiate level server on element index APP_LEVEL_ELEMENT_2 */
-//    ERROR_CHECK(app_level_init(&m_level_server_2, APP_ELEMENT_2_INDEX));
-//    __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "App level Model 2 Handle: %d\n", m_level_server_2.server.model_handle);
-//  }
-//
-//  if (get_node_configuration(CONFIG_CHANNEL_3) == LEVEL_SERVER_CONFIG) {
-//    /* Instantiate level server on element index APP_LEVEL_ELEMENT_3 */
-//    ERROR_CHECK(app_level_init(&m_level_server_3, APP_ELEMENT_3_INDEX));
-//    __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "App level Model 3 Handle: %d\n", m_level_server_3.server.model_handle);
-//  }
-//
-//  if (get_node_configuration(CONFIG_CHANNEL_4) == LEVEL_SERVER_CONFIG) {
-//    /* Instantiate level server on element index APP_LEVEL_ELEMENT_4 */
-//    ERROR_CHECK(app_level_init(&m_level_server_4, APP_ELEMENT_4_INDEX));
-//    __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "App level Model 4 Handle: %d\n", m_level_server_4.server.model_handle);
-//  }
-
-//  if (get_node_configuration(CONFIG_CHANNEL_1) == LEVEL_CLIENT_CONFIG) {
-//    m_level_clients[0].settings.p_callbacks = &level_client_cbs;
-//    m_level_clients[0].settings.timeout = 0;
-//    m_level_clients[0].settings.force_segmented = APP_CONFIG_FORCE_SEGMENTATION;
-//    m_level_clients[0].settings.transmic_size = APP_CONFIG_MIC_SIZE;
-//    ERROR_CHECK(generic_level_client_init(&m_level_clients[0], APP_ELEMENT_1_INDEX));
-//    __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "App level Model client 1 Handle: %d\n", m_level_clients[0].model_handle);
-//  }
 }
 /*******************************************END***************************************************/
