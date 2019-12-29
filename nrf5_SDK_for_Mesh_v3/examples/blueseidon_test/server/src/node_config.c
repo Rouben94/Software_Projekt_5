@@ -65,7 +65,7 @@ uint8_t get_node_configuration(int CONFIG) {
   switch (CONFIG) {
 
   case 0: {
-    return CHANNEL_1;
+    return 2;//CHANNEL_1;
     break;
   }
 

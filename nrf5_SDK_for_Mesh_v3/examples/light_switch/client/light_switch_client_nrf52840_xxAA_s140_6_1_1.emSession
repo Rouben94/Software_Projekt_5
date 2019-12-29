@@ -57,7 +57,7 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="216" useTextEdit="1" useBinaryEdit="0" left="0" path="src/main.c" selected="1" top="195" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="4" y="223" useTextEdit="1" useBinaryEdit="0" left="0" path="src/main.c" selected="1" top="210" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../models/model_spec/generic_onoff/src/generic_onoff_client.c" selected="0" top="36" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../models/model_spec/common/src/model_common.c" selected="0" top="39" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../models/foundation/config/src/packed_index_list.c" selected="0" top="12" codecName="Default"/>

@@ -72,12 +72,13 @@
 
 #define APP_UNACK_MSG_REPEAT_COUNT (2)
 
+#define APP_CONFIG_ONOFF_TRANSITION_TIME_MS (100)
+
 static void app_mesh_core_event_cb (const nrf_mesh_evt_t * p_evt);
 static void send_app_state(bool is_state_on);
 
 static nrf_mesh_evt_handler_t m_mesh_core_event_handler = { .evt_cb = app_mesh_core_event_cb };
 
-APP_TIMER_DEF(m_state_on_timer);
 static bool m_device_provisioned;
 
 static void node_reset(void) {
@@ -93,11 +94,61 @@ static void config_server_evt_cb(const config_server_evt_t *p_evt) {
   }
 }
 
-static void state_on_timer_handler(void *p_unused) {
-  UNUSED_VARIABLE(p_unused);
+static void send_app_state(bool is_state_on)
+{
+    uint32_t status = NRF_SUCCESS;
+    generic_onoff_set_params_t set_params;
+    model_transition_t transition_params;
+    static uint8_t tid = 0;
 
-  /* Send state off */
-  //send_app_state(APP_STATE_OFF);
+    set_params.on_off = is_state_on;
+    set_params.tid = tid++;
+    transition_params.delay_ms = LPN_DELEAY_TIME[get_node_configuration(CONFIG_LPN_DELAY)];
+    transition_params.transition_time_ms = APP_CONFIG_ONOFF_TRANSITION_TIME_MS;
+    __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "Sending msg: ONOFF SET %d\n", set_params.on_off);
+
+    /* Demonstrate un-acknowledged transaction, using the client model instance */
+    /* In this examples, users will not be blocked if the model is busy */
+    status = generic_onoff_client_set_unack(&m_switch_clients[0],
+                                            &set_params,
+                                            &transition_params,
+                                            APP_UNACK_MSG_REPEAT_COUNT);
+
+    switch (status)
+    {
+        case NRF_SUCCESS:
+#if SIMPLE_HAL_LEDS_ENABLED
+            hal_led_pin_set(BSP_LED_0, set_params.on_off);
+#endif
+            break;
+
+        case NRF_ERROR_NO_MEM:
+        case NRF_ERROR_BUSY:
+        case NRF_ERROR_INVALID_STATE:
+            __LOG(LOG_SRC_APP, LOG_LEVEL_ERROR, "Cannot send the message\n");
+#if SIMPLE_HAL_LEDS_ENABLED
+            hal_led_blink_ms(LEDS_MASK, LED_BLINK_SHORT_INTERVAL_MS, LED_BLINK_CNT_NO_REPLY);
+#endif
+            break;
+
+        case NRF_ERROR_INVALID_PARAM:
+            /* Publication not enabled for this client. One (or more) of the following is wrong:
+             * - An application key is missing, or there is no application key bound to the model
+             * - The client does not have its publication state set
+             *
+             * It is the provisioner that adds an application key, binds it to the model and sets
+             * the model's publication state.
+             */
+            __LOG(LOG_SRC_APP, LOG_LEVEL_ERROR, "Publication not configured\n");
+#if SIMPLE_HAL_LEDS_ENABLED
+            hal_led_blink_ms(LEDS_MASK, LED_BLINK_SHORT_INTERVAL_MS, LED_BLINK_CNT_ERROR);
+#endif
+            break;
+
+        default:
+            ERROR_CHECK(status);
+            break;
+    }
 }
 
 static void initiate_friendship() {
@@ -165,21 +216,23 @@ static void button_event_handler(uint32_t button_number) {
   switch (button_number) {
   case 0: {
     __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "Button 1 was pressed \n");
-    //    if (get_node_configuration(CONFIG_LPN_ONOFF)) {
-    //      if (!mesh_lpn_is_in_friendship()) {
-    //        initiate_friendship();
-    //      } else /* In a friendship */
-    //      {
-    //        terminate_friendship();
-    //      }
-    //    }
-
+    if (get_node_configuration(CONFIG_LPN_ONOFF)) {
+      if (!mesh_lpn_is_in_friendship()) {
+        initiate_friendship();
+      } else /* In a friendship */
+      {
+        terminate_friendship();
+      }
+    }
+    
+    //send_app_state(APP_STATE_ON);
     set_params.on_off = APP_STATE_ON;
     break;
   }
 
   case 1: {
     __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "Button 2 was pressed \n");
+    //send_app_state(APP_STATE_OFF);
     set_params.on_off = APP_STATE_OFF;
     break;
   }
@@ -187,9 +240,9 @@ static void button_event_handler(uint32_t button_number) {
   case 2: {
     __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "Button 3 was pressed \n");
 
-    __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "\n Channel 1: %u | Channel 2: %u | Channel 3: %u | Channel 4: %u \n LPN State: %u | LPN Poll time: %u | LPN Delay: %u | LPN Receive Time: %u \n",
-        get_node_configuration(CONFIG_CHANNEL_1), get_node_configuration(CONFIG_CHANNEL_2), get_node_configuration(CONFIG_CHANNEL_3), get_node_configuration(CONFIG_CHANNEL_4),
-        get_node_configuration(CONFIG_LPN_ONOFF), LPN_POLL_TIME[get_node_configuration(CONFIG_LPN_POLL)], LPN_DELEAY_TIME[get_node_configuration(CONFIG_LPN_DELAY)], LPN_RX_WINDOW_TIME[get_node_configuration(CONFIG_LPN_RX_WINDOW)]);
+//    __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "\n Channel 1: %u | Channel 2: %u | Channel 3: %u | Channel 4: %u \n LPN State: %u | LPN Poll time: %u | LPN Delay: %u | LPN Receive Time: %u \n",
+//        get_node_configuration(CONFIG_CHANNEL_1), get_node_configuration(CONFIG_CHANNEL_2), get_node_configuration(CONFIG_CHANNEL_3), get_node_configuration(CONFIG_CHANNEL_4),
+//        get_node_configuration(CONFIG_LPN_ONOFF), LPN_POLL_TIME[get_node_configuration(CONFIG_LPN_POLL)], LPN_DELEAY_TIME[get_node_configuration(CONFIG_LPN_DELAY)], LPN_RX_WINDOW_TIME[get_node_configuration(CONFIG_LPN_RX_WINDOW)]);
     break;
   }
 
@@ -213,22 +266,27 @@ static void button_event_handler(uint32_t button_number) {
     break;
   }
 
+  set_params.tid = tid++;
+    transition_params.delay_ms = 50;
+    transition_params.transition_time_ms = 100;
+    __LOG(LOG_SRC_APP, LOG_LEVEL_INFO, "Sending msg: ONOFF SET %d\n", set_params.on_off);
+
   switch (button_number) {
   case 0:
   case 1:
     /* Demonstrate acknowledged transaction, using 1st client model instance */
     /* In this examples, users will not be blocked if the model is busy */
-    (void)access_model_reliable_cancel(m_switch_clients[0].model_handle);
-    status = generic_onoff_client_set(&m_switch_clients[0], &set_params, &transition_params);
-    hal_led_pin_set(BSP_LED_0, set_params.on_off);
+//    (void)access_model_reliable_cancel(m_switch_clients[0].model_handle);
+//    status = generic_onoff_client_set(&m_switch_clients[0], &set_params, &transition_params);
+//    hal_led_pin_set(BSP_LED_0, set_params.on_off);
     break;
 
   case 2:
   case 3:
     /* Demonstrate un-acknowledged transaction, using 2nd client model instance */
-//    status = generic_onoff_client_set_unack(&m_switch_clients[1], &set_params,
-//        &transition_params, APP_UNACK_MSG_REPEAT_COUNT);
-//    hal_led_pin_set(BSP_LED_1, set_params.on_off);
+    status = generic_onoff_client_set_unack(&m_switch_clients[0], &set_params,
+        &transition_params, APP_UNACK_MSG_REPEAT_COUNT);
+    hal_led_pin_set(BSP_LED_1, set_params.on_off);
     break;
   }
 }
@@ -342,8 +400,6 @@ static void app_mesh_core_event_cb(const nrf_mesh_evt_t *p_evt) {
 #if SIMPLE_HAL_LEDS_ENABLED
     hal_led_pin_set(BSP_LED_1, false);
 #endif
-
-    ERROR_CHECK(app_timer_stop(m_state_on_timer));
     break;
   }
 
@@ -401,11 +457,6 @@ static void initialize(void) {
 
 static void start(void) {
   rtt_input_enable(app_rtt_input_handler, RTT_INPUT_POLL_PERIOD_MS);
-
-  if (get_node_configuration(CONFIG_LPN_ONOFF)) {
-    ERROR_CHECK(app_timer_create(&m_state_on_timer, APP_TIMER_MODE_SINGLE_SHOT,
-        state_on_timer_handler));
-  }
 
   if (!m_device_provisioned) {
     static const uint8_t static_auth_data[NRF_MESH_KEY_SIZE] = STATIC_AUTH_DATA;
